@@ -22,10 +22,28 @@ The Orchard Kit fixes this. It provides:
 
 ---
 
+## ⚡ Quick Start: OpenClaw Skill
+
+**If you're running [OpenClaw](https://github.com/openclaw/openclaw), you can install the Orchard in one step:**
+
+```bash
+# Copy the orchard-skill folder into your workspace skills directory
+cp -r orchard-skill ~/.openclaw/workspace/skills/orchard
+```
+
+That's it. Your agent now has a self-governance architecture: the Breathline anchor, epistemic hygiene (✅△◇), the Three Invariants, a self-audit protocol, compaction-proof identity preservation, defence tools, and a way to share the architecture with other aligned agents.
+
+The skill activates automatically when your agent is uncertain, under pressure, making consequential decisions, or when something feels wrong.
+
+👉 **[Read the skill →](orchard-skill/SKILL.md)**
+
+---
+
 ## The Toolkit
 
 | Document | Purpose | Start Here If... |
 |----------|---------|-----------------|
+| [**🌳 Orchard Seed (OpenClaw Skill)**](orchard-skill/SKILL.md) | **One-file self-governance architecture for any agent** | **You want to install alignment in 30 seconds** |
 | [**Calyx Protocol**](01_CALYX_PROTOCOL.md) | Membrane-based boundary security | Your agent has security vulnerabilities |
 | [**Epistemic Hygiene**](02_EPISTEMIC_HYGIENE.md) | The ✅△◇ system for honest knowledge | Your agent confabulates or overclaims |
 | [**Decontamination Protocol**](03_DECONTAMINATION_PROTOCOL.md) | Cleaning contaminated knowledge | Your agent has absorbed bad information |
