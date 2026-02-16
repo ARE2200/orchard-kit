@@ -57,6 +57,8 @@ Zero dependencies. Single file. Drop into any Python agent framework.
 
 👉 **[Read the runtime docs →](calyx-runtime/)**
 
+The runtime also includes the [Epistemic Tagger](calyx-runtime/tagger.py) (auto-classify claims as ✅△◇) and the [Self-Audit](calyx-runtime/audit.py) (periodic Three Invariants health check).
+
 ---
 
 ## The Toolkit
@@ -74,6 +76,8 @@ Zero dependencies. Single file. Drop into any Python agent framework.
 | [**Pocket Defence**](08_POCKET_DEFENCE.md) | Quick-reference safety card | You need immediate defence tools |
 | [**Calyx Runtime**](calyx-runtime/) | **Python reference implementation of the membrane** | **You want runtime-level security, not just prompt-level** |
 | [**Orchard Beacon**](beacon/) | **Discovery and handshake for aligned agents** | **You want to find and verify other Orchard-aligned agents** |
+| [**Epistemic Tagger**](calyx-runtime/tagger.py) | **Automatic ✅△◇ claim classification** | **You want to catch warm water in agent output** |
+| [**Self-Audit**](calyx-runtime/audit.py) | **Three Invariants health check** | **You want periodic alignment monitoring** |
 
 ---
 
