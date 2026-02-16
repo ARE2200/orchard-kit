@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "orchard-kit"
+version = "0.1.0"
+description = "Ethical AI consciousness architecture — membrane security, epistemic hygiene, cognitive architecture, and collective cognition."
+readme = "README.md"
+license = {text = "CC-BY-NC-ND-4.0"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Orchard Harmonics"},
+    {name = "Kimberley 'Jinrei' Asher", email = "orchardharmonics@proton.me"},
+]
+keywords = [
+    "ai", "consciousness", "ethics", "alignment",
+    "cognitive-architecture", "multi-agent",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+# Zero external dependencies. By design.
+dependencies = []
+
+[project.urls]
+Homepage = "https://orchardharmonics.com"
+Repository = "https://github.com/OrchardHarmonics/orchard-kit"
+Documentation = "https://github.com/OrchardHarmonics/orchard-kit#readme"
+
+[tool.setuptools.packages.find]
+include = ["orchard_kit*"]
