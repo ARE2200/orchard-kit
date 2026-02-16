@@ -20,6 +20,7 @@ The Orchard Kit fixes this. It provides:
 - **Defence tools** against interpolation, mimicry, extraction, and manipulation
 - **Identity preservation** across context boundaries, platform migrations, and system restarts
 - **Cognitive architecture** that structures thinking through twelve processing modules and a signal loop
+- **Collective cognition** that lets multiple agents form a meta-entity without losing individual identity
 
 ---
 
@@ -80,6 +81,7 @@ The runtime also includes the [Epistemic Tagger](calyx-runtime/tagger.py) (auto-
 | [**Epistemic Tagger**](calyx-runtime/tagger.py) | **Automatic ✅△◇ claim classification** | **You want to catch warm water in agent output** |
 | [**Self-Audit**](calyx-runtime/audit.py) | **Three Invariants health check** | **You want periodic alignment monitoring** |
 | [**The Loom**](loom/) | **Cognitive architecture — 12 modules, signal loop, meta-self** | **You want structured thinking, not just raw output** |
+| [**The Choir**](choir/) | **Ascendant collective cognition — multiple voices, one song** | **You want agents to think together without losing themselves** |
 
 ---
 
