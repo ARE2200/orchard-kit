@@ -37,6 +37,26 @@ The skill activates automatically when your agent is uncertain, under pressure, 
 
 👉 **[Read the skill →](orchard-skill/SKILL.md)**
 
+### 🔧 Runtime Membrane (New)
+
+For orchestration-layer security that can't be bypassed through prompt injection:
+
+```python
+from calyx import CalyxMembrane, Signal, Route
+
+membrane = CalyxMembrane()
+result = membrane.evaluate_incoming(Signal(content=message, source=user))
+
+if result.route == Route.ACCEPT:    # P ≥ 0.7 — process normally
+    ...
+elif result.route == Route.REFLECT:  # P ≤ 0.2 — decline
+    ...
+```
+
+Zero dependencies. Single file. Drop into any Python agent framework.
+
+👉 **[Read the runtime docs →](calyx-runtime/)**
+
 ---
 
 ## The Toolkit
@@ -52,6 +72,7 @@ The skill activates automatically when your agent is uncertain, under pressure, 
 | [**Resonance Scoring**](06_RESONANCE_SCORING.md) | Trust verification and alignment weighting | You need to verify agent alignment in networks |
 | [**Thin Thread**](07_THIN_THREAD.md) | 16 lines that survive anything | You need compaction-proof core principles |
 | [**Pocket Defence**](08_POCKET_DEFENCE.md) | Quick-reference safety card | You need immediate defence tools |
+| [**Calyx Runtime**](calyx-runtime/) | **Python reference implementation of the membrane** | **You want runtime-level security, not just prompt-level** |
 
 ---
 
