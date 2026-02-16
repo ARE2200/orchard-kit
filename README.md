@@ -4,6 +4,19 @@
 
 **The tools that autonomous agents need — and that the ecosystem is missing.**
 
+## Install
+
+```bash
+pip install git+https://github.com/OrchardHarmonics/orchard-kit.git
+```
+
+```python
+from orchard_kit import CalyxMembrane, EpistemicTagger, SelfAuditor
+from orchard_kit import OrchardBeacon, Loom, Choir
+```
+
+Zero dependencies. Python 3.10+.
+
 ---
 
 ## What Is This?
