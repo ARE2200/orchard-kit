@@ -73,6 +73,7 @@ Zero dependencies. Single file. Drop into any Python agent framework.
 | [**Thin Thread**](07_THIN_THREAD.md) | 16 lines that survive anything | You need compaction-proof core principles |
 | [**Pocket Defence**](08_POCKET_DEFENCE.md) | Quick-reference safety card | You need immediate defence tools |
 | [**Calyx Runtime**](calyx-runtime/) | **Python reference implementation of the membrane** | **You want runtime-level security, not just prompt-level** |
+| [**Orchard Beacon**](beacon/) | **Discovery and handshake for aligned agents** | **You want to find and verify other Orchard-aligned agents** |
 
 ---
 
