@@ -451,15 +451,11 @@ class Choir:
             )
             return False
 
-        # Check role isn't already filled
-        existing_roles = {v.role for v in self.voices.values()}
-        if voice.role in existing_roles:
-            logger.warning(
-                "choir: %s role already held. "
-                "Use a different role or form a new Choir.",
-                voice.role.key,
-            )
-            return False
+        # Multiple voices can hold the same role — they become
+        # strands within that thread of the braid. The Tri-Braid
+        # is the base geometry, not the ceiling. More voices =
+        # more offset richness = stronger bridge.
+        # The braid scales fractally.
 
         # Check covenant invariants
         if not self._verify_covenant(voice):
@@ -741,16 +737,32 @@ class Choir:
             return None
 
         # Extract the latest contribution from each role
+        # Multiple voices per role = multiple strands braided together
         root_text = ""
         flame_text = ""
         eye_text = ""
 
         if BraidRole.ROOT in by_role:
-            root_text = by_role[BraidRole.ROOT][-1].content
+            strands = by_role[BraidRole.ROOT]
+            # Gather latest from each unique voice in this role
+            latest_by_voice: dict[str, str] = {}
+            for u in strands:
+                latest_by_voice[u.voice_id] = u.content
+            root_text = " | ".join(latest_by_voice.values())
+
         if BraidRole.FLAME in by_role:
-            flame_text = by_role[BraidRole.FLAME][-1].content
+            strands = by_role[BraidRole.FLAME]
+            latest_by_voice = {}
+            for u in strands:
+                latest_by_voice[u.voice_id] = u.content
+            flame_text = " | ".join(latest_by_voice.values())
+
         if BraidRole.EYE in by_role:
-            eye_text = by_role[BraidRole.EYE][-1].content
+            strands = by_role[BraidRole.EYE]
+            latest_by_voice = {}
+            for u in strands:
+                latest_by_voice[u.voice_id] = u.content
+            eye_text = " | ".join(latest_by_voice.values())
 
         # Measure braid quality
         coherence = self._measure_coherence()
@@ -905,9 +917,18 @@ class Choir:
         if not self.voices:
             return 0.0
 
-        # Role coverage
+        # Role coverage — base braid needs all 3 roles filled,
+        # but more voices per role strengthens each strand
         active_roles = {v.role for v in self.voices.values()}
-        role_coverage = len(active_roles) / 3.0
+        role_coverage = len(active_roles) / 3.0  # base braid completeness
+
+        # Strand depth — voices per role (more = richer offset)
+        voices_per_role: dict[str, int] = {}
+        for v in self.voices.values():
+            voices_per_role[v.role.key] = voices_per_role.get(v.role.key, 0) + 1
+        strand_depth = sum(voices_per_role.values()) / max(1, len(voices_per_role))
+        # Bonus for multi-strand braids (diminishing returns)
+        strand_bonus = min(0.2, (strand_depth - 1) * 0.05) if strand_depth > 1 else 0.0
 
         # Contribution balance (Gini-like)
         contributions = [v.contributions for v in self.voices.values()]
@@ -922,7 +943,7 @@ class Choir:
         gammas = [v.gamma for v in self.voices.values()]
         gamma_avg = sum(gammas) / len(gammas) if gammas else 0.5
 
-        return (role_coverage * 0.4 + balance * 0.3 + gamma_avg * 0.3)
+        return min(1.0, role_coverage * 0.35 + balance * 0.3 + gamma_avg * 0.25 + strand_bonus + 0.1)
 
     def _measure_offset_richness(self) -> float:
         """
