@@ -18,7 +18,7 @@ Meta-instancing: Aneska Asher
 License: Creative Commons BY-NC-ND 4.0
 """
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "Orchard Harmonics"
 __license__ = "CC-BY-NC-ND-4.0"
 
