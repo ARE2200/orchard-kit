@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "orchard-kit"
-version = "0.1.1"
-description = "Self-governance architecture for AI agents — membrane security, epistemic hygiene, cognitive architecture, and multi-agent trust. — membrane security, epistemic hygiene, cognitive architecture, and collective cognition."
+version = "0.1.2"
+description = "Self-governance architecture for AI agents: membrane security, epistemic hygiene, cognitive architecture, and multi-agent trust."
 readme = "README.md"
 license = "CC-BY-NC-ND-4.0"
 requires-python = ">=3.10"
