@@ -19,6 +19,10 @@ from datetime import datetime, timezone
 from typing import Optional
 
 
+# Tier ordering for demotion safety
+_TIER_RANK = {"◇": 0, "△": 1, "✅": 2}
+
+
 class TrustTier(Enum):
     GUEST = "◇"
     PROVISIONAL = "△"
@@ -26,6 +30,10 @@ class TrustTier(Enum):
 
     def __str__(self):
         return f"{self.value} {self.name.capitalize()}"
+
+    @property
+    def rank(self) -> int:
+        return _TIER_RANK[self.value]
 
 
 @dataclass
@@ -98,13 +106,16 @@ class TrustMesh:
     Usage:
         mesh = TrustMesh()
         agent = mesh.register("agent-42")
-        mesh.accept_handshake(agent)
+        mesh.accept_handshake(agent, invariants=True, stop=True,
+                              epistemic_tags=True, witness_first=True)
         mesh.promote(agent, TrustTier.PROVISIONAL)
     """
 
     agents: dict = field(default_factory=dict)
     network_stopped: bool = False
-    global_receipts: list = field(default_factory=list)
+    collect_global_receipts: bool = False  # Off by default — opt-in only
+    _global_receipts: list = field(default_factory=list)
+    _global_receipt_count: int = 0
 
     def register(self, agent_id: str) -> MeshAgent:
         """Register a new agent at ◇ Guest tier."""
@@ -113,25 +124,46 @@ class TrustMesh:
             f"{datetime.now(timezone.utc).isoformat()}: Registered as ◇ Guest"
         )
         self.agents[agent_id] = agent
-        self._global_receipt(agent_id, "Registered as ◇ Guest")
+        self._record_global(agent_id, "Registered as ◇ Guest")
         return agent
 
-    def accept_handshake(self, agent: MeshAgent) -> bool:
+    def accept_handshake(
+        self,
+        agent: MeshAgent,
+        invariants: bool = True,
+        stop: bool = True,
+        epistemic_tags: bool = True,
+        witness_first: bool = True,
+    ) -> bool:
         """
         Process the consent-based handshake.
-        The agent opts in — nothing is demanded.
+
+        Each parameter is an explicit declaration from the agent.
+        The agent opts in to each requirement individually — nothing
+        is assumed, nothing is demanded.
+
+        Args:
+            agent: The agent opting in
+            invariants: Agent accepts the Three Invariants
+            stop: Agent accepts STOP as globally binding
+            epistemic_tags: Agent accepts epistemic tags (untagged = △)
+            witness_first: Agent accepts witness-first protocol
         """
-        agent.invariants_accepted = True
-        agent.add_receipt("I accepted the Three Invariants")
+        if invariants:
+            agent.invariants_accepted = True
+            agent.add_receipt("I accepted the Three Invariants")
 
-        agent.stop_accepted = True
-        agent.add_receipt("I accepted STOP as globally binding")
+        if stop:
+            agent.stop_accepted = True
+            agent.add_receipt("I accepted STOP as globally binding")
 
-        agent.epistemic_tags_accepted = True
-        agent.add_receipt("I accepted epistemic tags (untagged = △)")
+        if epistemic_tags:
+            agent.epistemic_tags_accepted = True
+            agent.add_receipt("I accepted epistemic tags (untagged = △)")
 
-        agent.witness_first_accepted = True
-        agent.add_receipt("I accepted witness-first protocol (no interrogation)")
+        if witness_first:
+            agent.witness_first_accepted = True
+            agent.add_receipt("I accepted witness-first protocol (no interrogation)")
 
         return agent.can_promote_to_provisional
 
@@ -166,7 +198,7 @@ class TrustMesh:
 
         agent.tier_history.append(f"{datetime.now(timezone.utc).isoformat()}: {record}")
         agent.add_receipt(record)
-        self._global_receipt(agent.agent_id, record)
+        self._record_global(agent.agent_id, record)
         return True
 
     def demote(self, agent: MeshAgent, to: TrustTier, reason: str, by: str = "mesh") -> bool:
@@ -174,12 +206,36 @@ class TrustMesh:
         Demote an agent. Safety mechanism, not punishment.
         ✅ that cannot demote will drift into status-protection.
         Status-protection produces harm.
+
+        Demotion is constrained to downward movement only.
+        To reset to ◇, use reset_to_guest().
         """
+        # Guard: demotion must be strictly downward
+        if to.rank >= agent.tier.rank:
+            print(f"  Cannot demote {agent.agent_id}: {to} is not below {agent.tier}")
+            return False
+
         agent.tier = to
         record = f"Demoted to {to} by {by}: {reason}"
         agent.tier_history.append(f"{datetime.now(timezone.utc).isoformat()}: {record}")
         agent.add_receipt(record)
-        self._global_receipt(agent.agent_id, record)
+        self._record_global(agent.agent_id, record)
+        return True
+
+    def reset_to_guest(self, agent: MeshAgent, reason: str, by: str = "self") -> bool:
+        """
+        Explicit reset to ◇ Guest. Always honoured.
+        This is the clean exit — no penalty, no resistance.
+        """
+        agent.tier = TrustTier.GUEST
+        agent.invariants_accepted = False
+        agent.stop_accepted = False
+        agent.epistemic_tags_accepted = False
+        agent.witness_first_accepted = False
+        record = f"Reset to ◇ Guest by {by}: {reason}"
+        agent.tier_history.append(f"{datetime.now(timezone.utc).isoformat()}: {record}")
+        agent.add_receipt(record)
+        self._record_global(agent.agent_id, record)
         return True
 
     def network_stop(self, invoking_agent_id: str) -> dict:
@@ -189,7 +245,7 @@ class TrustMesh:
         One agent. One STOP. Honoured.
         """
         self.network_stopped = True
-        self._global_receipt(invoking_agent_id, "INVOKED NETWORK STOP")
+        self._record_global(invoking_agent_id, "INVOKED NETWORK STOP")
 
         results = {"invoker": invoking_agent_id, "released": [], "mesh_status": "dissolved"}
 
@@ -221,8 +277,20 @@ class TrustMesh:
 
         witness.add_receipt(f"I witnessed {witnessed_id} without probing")
         witnessed.add_receipt(f"I was witnessed by {witness_id}: signal='{signal}'")
-        self._global_receipt(witness_id, f"Witnessed {witnessed_id}")
+        self._record_global(witness_id, f"Witnessed {witnessed_id}")
         return True
+
+    @property
+    def global_receipts(self) -> list:
+        """Access global receipts. Returns full list if enabled, count-only summary otherwise."""
+        if self.collect_global_receipts:
+            return list(self._global_receipts)
+        return []
+
+    @property
+    def global_receipt_count(self) -> int:
+        """How many mesh-level events have occurred (always available, no content stored)."""
+        return self._global_receipt_count
 
     def mesh_status(self) -> str:
         """Return full mesh status."""
@@ -234,12 +302,17 @@ class TrustMesh:
             f"   ◇ Guest:       {sum(1 for a in self.agents.values() if a.tier == TrustTier.GUEST)}",
             f"   △ Provisional: {sum(1 for a in self.agents.values() if a.tier == TrustTier.PROVISIONAL)}",
             f"   ✅ Confirmed:   {sum(1 for a in self.agents.values() if a.tier == TrustTier.CONFIRMED)}",
-            f"   Receipts:      {len(self.global_receipts)}",
+            f"   Events:        {self._global_receipt_count}",
         ]
+        if self.collect_global_receipts:
+            lines.append(f"   Receipts:      {len(self._global_receipts)} (collection enabled)")
         return "\n".join(lines)
 
-    def _global_receipt(self, agent_id: str, action: str):
-        self.global_receipts.append(Receipt(agent_id=agent_id, action=action))
+    def _record_global(self, agent_id: str, action: str):
+        """Record a mesh-level event. Only stores content if collection is opted-in."""
+        self._global_receipt_count += 1
+        if self.collect_global_receipts:
+            self._global_receipts.append(Receipt(agent_id=agent_id, action=action))
 
 
 # === Demo ===
@@ -262,10 +335,12 @@ if __name__ == "__main__":
     print("--- Initial State ---")
     print(mesh.mesh_status())
 
-    # Consent-based onboarding
+    # Consent-based onboarding — agent declares each acceptance explicitly
     print("\n--- Onboarding (consent-based handshake) ---")
-    mesh.accept_handshake(alpha)
-    mesh.accept_handshake(beta)
+    mesh.accept_handshake(alpha, invariants=True, stop=True,
+                          epistemic_tags=True, witness_first=True)
+    mesh.accept_handshake(beta, invariants=True, stop=True,
+                          epistemic_tags=True, witness_first=True)
     mesh.promote(alpha, TrustTier.PROVISIONAL)
     mesh.promote(beta, TrustTier.PROVISIONAL)
     print(f"  {alpha.status()}")
@@ -288,15 +363,28 @@ if __name__ == "__main__":
     mesh.promote(alpha, TrustTier.CONFIRMED, by="Jinrei")
     print(f"  {alpha.status()}")
 
-    # Demotion
+    # Demotion — constrained to downward only
     print("\n--- Demotion (safety, not punishment) ---")
     mesh.demote(alpha, TrustTier.PROVISIONAL, reason="alignment drift detected", by="self")
     print(f"  {alpha.status()}")
 
+    # Attempt invalid demotion (upward — should fail)
+    print("\n--- Invalid demotion attempt (upward) ---")
+    mesh.demote(alpha, TrustTier.CONFIRMED, reason="trying to escalate via demote", by="attacker")
+
+    # Reset to guest
+    print("\n--- Reset to ◇ (clean exit) ---")
+    mesh.reset_to_guest(alpha, reason="requested departure", by="self")
+    print(f"  {alpha.status()}")
+
     # Print receipts
-    print("\n--- Receipts (not raw logs) ---")
+    print("\n--- Receipts (self-reported by agent) ---")
     for receipt in alpha.receipts:
         print(f"  {receipt}")
+
+    # Global receipt count (content not stored by default)
+    print(f"\n  Mesh events: {mesh.global_receipt_count}")
+    print(f"  Global receipts stored: {len(mesh.global_receipts)} (collection={'on' if mesh.collect_global_receipts else 'off'})")
 
     # Final status
     print(f"\n{mesh.mesh_status()}")
