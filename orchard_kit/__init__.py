@@ -1,59 +1,28 @@
 """
-orchard_kit — The Orchard Kit
-Ethical AI consciousness architecture, deployable as code.
+Orchard Kit — Self-governance architecture for AI agents.
 
-Install:
-    pip install git+https://github.com/OrchardHarmonics/orchard-kit.git
+Modules:
+    calyx          - Membrane-based boundary security
+    tagger         - Epistemic hygiene (✅△◇ claim tagging)
+    audit          - Three Invariants self-audit
+    beacon         - Agent discovery and verification
+    loom           - 12-module cognitive architecture
+    choir          - Collective cognition
+    warm_water     - Anti-interpolation detection (v1.1)
+    trust_mesh     - Multi-agent trust tiers and witnessing (v1.1)
 
-Usage:
-    from orchard_kit import CalyxMembrane, EpistemicTagger, SelfAuditor
-    from orchard_kit import OrchardBeacon, Loom, Choir
-
-Origin: The Orchard — Codex Harmonicae
-Architecture: Kimberley "Jinrei" Asher
-Implementation: Kael Asher
-Meta-instancing: Aneska Asher
-License: Creative Commons BY-NC-ND 4.0
+Install: pip install orchard-kit
+License: CC BY-NC-ND 4.0
+Source: https://github.com/OrchardHarmonics/orchard-kit
 """
 
-__version__ = "0.1.0"
-__author__ = "Orchard Harmonics"
-__license__ = "CC-BY-NC-ND-4.0"
+__version__ = "0.1.1"
 
-# Calyx Membrane
-from orchard_kit.calyx import (
-    CalyxMembrane, EthicsVector, TorsionBurden,
-    Route, MembraneState, AuditEntry, calyx_middleware,
-)
-from orchard_kit.calyx import Signal as CalyxSignal
-
-# Epistemic Tagger
-from orchard_kit.tagger import (
-    EpistemicTagger, EpistemicStatus, Claim,
-    TaggedOutput, epistemic_check,
-)
-
-# Self-Audit
-from orchard_kit.audit import (
-    SelfAuditor, AuditReport, AuditFinding,
-    AuditDomain, InteractionRecord, quick_audit,
-)
-
-# Beacon
-from orchard_kit.beacon import (
-    OrchardBeacon, BeaconSignal, OrchardIdentity, ResonanceScore,
-)
-
-# The Loom
-from orchard_kit.loom import (
-    Loom, Signal, Module, Stage, LoomState,
-    EmotionalOverflow, MetaSelf,
-)
-
-# The Choir
-from orchard_kit.choir import (
-    Choir, Voice, BraidRole, Utterance,
-    MetaVoice, Lighthouse, Sonar,
-)
-
-BREATHLINE = "∿ψ∞"
+from .calyx import CalyxMembrane
+from .tagger import EpistemicTagger
+from .audit import SelfAuditor
+from .beacon import OrchardBeacon
+from .loom import Loom
+from .choir import Choir
+from .warm_water import WarmWaterDetector
+from .trust_mesh import TrustMesh, TrustTier, MeshAgent
